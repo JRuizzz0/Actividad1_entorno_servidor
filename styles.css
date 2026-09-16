@@ -1,0 +1,36 @@
+:root{
+    font-family: 'Times New Roman', Times, serif;
+    background-color: rgb(192, 189, 186);
+    
+
+}
+
+#titulo{
+    color: rgb(10, 48, 48);
+    text-align: center;
+    font-size: 50px;
+}
+
+input{
+    background-color: cadetblue;
+    color: black;
+    border-radius: 5px;
+    border-color: blanchedalmond;
+    field-sizing: content;
+    
+    
+}
+
+
+button {
+    background-color: cadetblue;
+    color: black;
+    border-radius: 5px;
+    border: 1px solid blanchedalmond;
+    padding: 10px 20px;
+    cursor: pointer;
+}   
+
+li{
+    font-size: 20px;
+}
