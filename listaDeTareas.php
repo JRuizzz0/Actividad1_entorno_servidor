@@ -125,9 +125,5 @@ if(isset($_POST['accion']) && $_POST['accion'] === 'eliminar'){
 
 </main>
 
-
-
-
-    
 </body>
 </html>

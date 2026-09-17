@@ -1,0 +1,101 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  min-height: 100vh;
+  color: #e0e0e0;
+}
+
+
+.header {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#titulo {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #f5a623;
+  background: linear-gradient(90deg, #e94560, #f5a623);
+  background-clip: text;
+}
+
+.main {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.formulario {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  animation: slideDown 0.4s ease-out;
+}
+
+#us {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#us:focus {
+  outline: none;
+  border-color: #e94560;
+  box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.2);
+}
+
+#us::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+#password {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#password:focus {
+  outline: none;
+  border-color: #e94560;
+  box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.2);
+}
+
+#password::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.formulario button {
+  padding: 0.8rem 1.4rem;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #e94560, #c23152);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.formulario button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(233, 69, 96, 0.4);
+}
