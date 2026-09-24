@@ -1,5 +1,5 @@
 <?php
-$host = 'pgsql:host=localhost;dbname=PruebaPHP';
+$host = 'pgsql:host=localhost;dbname=Tareas';
 $usuario = 'postgres';
 $password = 'postgres';
 

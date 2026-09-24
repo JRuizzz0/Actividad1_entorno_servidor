@@ -1,9 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['lista_tareas'])) {
-    $_SESSION['lista_tareas'] = [];
-}
+require_once 'conexión.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $accion = $_POST['accion'] ?? '';
@@ -12,14 +10,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $texto_tarea = trim($_POST['descripcion'] ?? '');
 
         if ($texto_tarea !== '') {
-            $nueva_tarea = [
-                'id' => uniqid(),
-                'descripcion' => $texto_tarea,
-                'estado' => 'no completada' // Ajustado según el enunciado
-            ];
+            $sql = "INSERT INTO Tareas (descripcion, estado) VALUES (:descripcion, 'pendiente')";
+            $stmt = $conexion->prepare($sql);
+            $stmt->bindParam(':descripcion', $texto_tarea);
+            $stmt->execute();
 
-            $_SESSION['lista_tareas'][] = $nueva_tarea;
-            header("Location: listaDeTareas.php");
+            header("Location: tareas_db.php");
             exit;
         }
     }
@@ -27,58 +23,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($accion === 'completar') {
         $id_buscado = $_POST['id_tarea'] ?? '';
 
-        foreach ($_SESSION['lista_tareas'] as $indice => $tarea) {
-            if ($id_buscado === $tarea['id']) {
-                $_SESSION['lista_tareas'][$indice]['estado'] = 'completada';
-                break;
-            }
+        if (!empty($id_buscado)) {
+            $sql = "UPDATE Tareas SET estado = 'completada' WHERE id_tarea = :id";
+            $stmt = $conexion->prepare($sql);
+            $stmt->bindParam(':id', $id_buscado);
+            $stmt->execute();
         }
 
-        header("Location: listaDeTareas.php");
+        header("Location: tareas_db.php");
         exit;
     }
 
     if ($accion === 'eliminar') {
         $id_buscado = $_POST['id_tarea'] ?? '';
 
-        foreach ($_SESSION['lista_tareas'] as $indice => $tarea) {
-            if ($id_buscado === $tarea['id']) {
-                unset($_SESSION['lista_tareas'][$indice]);
-                $_SESSION['lista_tareas'] = array_values($_SESSION['lista_tareas']);
-                break;
-            }
+        if (!empty($id_buscado)) {
+            $sql = "DELETE FROM Tareas WHERE id_tarea = :id";
+            $stmt = $conexion->prepare($sql);
+            $stmt->bindParam(':id', $id_buscado);
+            $stmt->execute();
         }
 
-        header("Location: listaDeTareas.php");
+        header("Location: tareas_db.php");
         exit;
     }
 }
+
+$sql_leer = "SELECT * FROM Tareas ORDER BY id_tarea ASC";
+$stmt_leer = $conexion->query($sql_leer);
+$lista_tareas = $stmt_leer->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Tareas</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Lista de Tareas - Base de Datos</title>
+    <link rel="stylesheet" href="styles4.css?v=1">
 </head>
 <body>
 
 <main class="contenedor">
     <header class="header">
-        <h1>Gestor de Tareas</h1>
+        <h1>Lista de Tareas</h1>
     </header>
 
     <form method="post" class="formulario">
-        <input type="text" name="descripcion" placeholder="¿Qué tarea quieres apuntar?" required>
-        <button type="submit" name="accion" value="añadir" class="btn btn-primario">Añadir</button>
+        <input type="text" name="descripcion" placeholder="Introduce la tarea..." required>
+        <button type="submit" name="accion" value="añadir" class="btn btn-primario">Agregar Tarea</button>
     </form>
 
     <ul class="lista-tareas">
-        <?php if (empty($_SESSION['lista_tareas'])): ?>
-            <li class="tarea-vacia">No hay tareas pendientes por ahora.</li>
+        <?php if (empty($lista_tareas)): ?>
+            <li class="tarea-vacia">No hay tareas registradas en la base de datos.</li>
         <?php else: ?>
-            <?php foreach ($_SESSION['lista_tareas'] as $tarea): ?>
+            <?php foreach ($lista_tareas as $tarea): ?>
                 <li class="tarea-item <?php echo $tarea['estado'] === 'completada' ? 'completada' : ''; ?>">
                     <div class="tarea-info">
                         <span class="tarea-desc"><?php echo htmlspecialchars($tarea['descripcion']); ?></span>
@@ -88,13 +87,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="tarea-acciones">
                         <?php if ($tarea['estado'] !== 'completada'): ?>
                             <form method="post" class="form-accion">
-                                <input type="hidden" name="id_tarea" value="<?php echo htmlspecialchars($tarea['id']); ?>">
+                                <input type="hidden" name="id_tarea" value="<?php echo htmlspecialchars($tarea['id_tarea']); ?>">
                                 <button type="submit" name="accion" value="completar" class="btn btn-completar" title="Marcar como completada">✔</button>
                             </form>
                         <?php endif; ?>
 
                         <form method="post" class="form-accion">
-                            <input type="hidden" name="id_tarea" value="<?php echo htmlspecialchars($tarea['id']); ?>">
+                            <input type="hidden" name="id_tarea" value="<?php echo htmlspecialchars($tarea['id_tarea']); ?>">
                             <button type="submit" name="accion" value="eliminar" class="btn btn-eliminar" title="Eliminar tarea">🗑</button>
                         </form>
                     </div>

@@ -1,6 +1,8 @@
 <?php
 session_start();
-require_once 'conexion.php';
+
+
+require_once 'conexión.php';
 
 $mensaje_error = "";
 
